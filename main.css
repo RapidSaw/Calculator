@@ -1,0 +1,103 @@
+@font-face {
+    font-family: Michroma;
+    src: url("Fonts/Michroma-Regular.ttf");
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(113, 106, 97);
+}
+
+.wrapper {
+    margin: 0 auto;
+    width: 300px;
+    background-color: rgb(31, 31, 31);
+    border-radius: 30px;
+}
+
+.main_result_window {
+    display: flex;
+    margin: 0 auto;
+    border-bottom: 1px solid rgba(211, 211, 211, 0.493);
+    width: 90%;
+    height: 150px;
+}
+
+.light {
+    width: 10px;
+    height: 10px;
+    position: relative;
+    top: 20px;
+    left: 20px;
+    border-radius: 5px;
+    background-color: gray;
+}
+
+.light_on {
+    width: 10px;
+    height: 10px;
+    position: relative;
+    top: 20px;
+    left: 20px;
+    border-radius: 5px;
+    background-color: rgb(0, 206, 0);
+}
+
+.result_screen {
+    height: 100px;
+    width: 100%;
+    margin-top: auto;
+}
+
+.result_screen p {
+    width: 100%;
+    text-align: right;
+    font-family: Michroma;
+    font-size: 40px;
+}
+
+.buttons_area {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.buttons_area .button{
+    text-align: center;
+    display: flex;
+    align-items: center;
+    width: 75px;
+    height: 75px;
+    transition: 0.2s;
+}
+
+.pushButton{
+    background-color: rgb(75, 75, 75);
+}
+
+.buttons_area .button:nth-child(17) {
+    border-radius: 0 0 0 30px;
+}
+
+.buttons_area .button:nth-child(20) {
+    border-radius: 0 0 30px 0;
+}
+
+.buttons_area .button p {
+    font-family: Michroma;
+    color: lightgray;
+    font-size: 36px;
+    width: 100%;
+    margin: auto 0;
+}
+
+.buttonHover {
+    border: 1px solid grey;
+    transition: 0.2s;
+}
+
