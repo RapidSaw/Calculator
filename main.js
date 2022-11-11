@@ -3,6 +3,7 @@ let greenLight = document.querySelector(".light")
 let button = document.querySelectorAll(".button")
 let numBtn = document.querySelectorAll("#numberButton")
 let output = document.querySelector(".result_screen p")
+let clearButton = document.querySelector("#clearButton")
 
 //Лампа активности
 calcZone.addEventListener("mouseover", function(){greenLight.className="light_on"})
@@ -17,6 +18,7 @@ button.forEach(btn => {
 })
 
 //Отображение цифр на экране при нажатии кнопок
+//Запись в переменные
 let firstNum = '';
 let secondNum = '';
 let sign = '';
@@ -27,4 +29,11 @@ numBtn.forEach(numBtn => {
         console.log(firstNum)
         output.textContent = firstNum
     })
+})
+
+clearButton.addEventListener("click", function(){
+    firstNum = '';
+    secondNum = '';
+    sign = '';
+    output.textContent = 0
 })
