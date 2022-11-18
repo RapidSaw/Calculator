@@ -21,7 +21,7 @@ body {
 }
 
 .main_result_window {
-    display: flex;
+    position: relative;
     margin: 0 auto;
     border-bottom: 1px solid rgba(211, 211, 211, 0.493);
     width: 90%;
@@ -48,10 +48,20 @@ body {
     background-color: rgb(0, 206, 0);
 }
 
-.result_screen {
-    height: 100px;
+.operation_window {
+    position: relative;
+    top: 35px;
+    color: lightgray;
     width: 100%;
-    margin-top: auto;
+    text-align: right;
+    font-family: Michroma;
+}
+
+.result_screen {
+    position: absolute;
+    top: 70px;
+    color: white;
+    width: 100%;
 }
 
 .result_screen p {

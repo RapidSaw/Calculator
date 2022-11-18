@@ -2,13 +2,13 @@ let calcZone = document.querySelector(".wrapper")
 let greenLight = document.querySelector(".light")
 let button = document.querySelectorAll(".button")
 let numBtn = document.querySelectorAll("#numberButton")
+let operatorBtn = document.querySelectorAll("#operator")
 let output = document.querySelector(".result_screen p")
+let operation = document.querySelector(".operation_window")
 let clearButton = document.querySelector("#clearButton")
 let sqrtButton = document.querySelector("#sqrtButton")
 let expButton = document.querySelector("#expButton")
-let sumButton = document.querySelector("#sumButton")
-let multButton = document.querySelector("#multButton")
-let divButton = document.querySelector("#divButton")
+let minusButton = document.querySelector("#minusButton")
 
 //Лампа активности
 calcZone.addEventListener("mouseover", function(){greenLight.className="light_on"})
@@ -28,40 +28,62 @@ let firstNum = '';
 let secondNum = '';
 let sign = '';
 
-//сложение
-sumButton.addEventListener("click", function(){
-    sign = sumButton.textContent
+//math operators
+operatorBtn.forEach(op => {
+    op.addEventListener("click", function signOperator () {
+    if ((firstNum !== "") && (secondNum !== "")) {
+        result ();
+    }
+    sign = op.textContent
+    })
 })
 
-//вычитание
-subButton.addEventListener("click", function(){
-    sign = subButton.textContent
-})
+// ввод с клавиатуры
+    document.addEventListener("keydown", function (getNum) {
+        let num = getNum.key
+        if (num >= "0" && num <= "9" || num == ".") {
+            if (sign == '' && secondNum == '') {
+                firstNum += num
+                output.textContent = firstNum
+            }
 
-//умножение
-multButton.addEventListener("click", function(){
-    sign = multButton.textContent
-})
+            else if (firstNum !== '') {
+                output.textContent = ''
+                secondNum += num
+                output.textContent = secondNum
+            }
+        }
 
-//деление
-divButton.addEventListener("click", function(){
-    sign = divButton.textContent
-})
+        if (num == "+" || num == "-" || num == "*" || num == "/") {
+            sign = num
+            output.textContent = sign
+        }
+        operation.textContent = firstNum + sign + secondNum
+        
+    })
 
+//ввод с кнопок мышью
 numBtn.forEach(numBtn => {
-    numBtn.addEventListener("click", function (getNum) {
+    numBtn.addEventListener("click", function getNumber (getNum) {
         let num = getNum.target.textContent
-        if (sign == '' && secondNum == '') {
-            firstNum += num
-            output.textContent = firstNum
+        if (num >= "0" && num <= "9" || num == ".") {
+            if (sign == '' && secondNum == '') {
+                firstNum += num
+                output.textContent = firstNum
+            }
+            else if (firstNum !== '') {
+                output.textContent = ''
+                secondNum += num
+                output.textContent = secondNum
+            }
         }
-
-        else if (firstNum !== '' && sign !== '') {
-            output.textContent = ''
-            secondNum += num
-            output.textContent = secondNum
-            console.log(secondNum)
+        if (num == "+" || num == "-" || num == "*" || num == "/") {
+                sign = num
+                output.textContent = sign
+                console.log(sign)
         }
+        operation.textContent = firstNum + sign + secondNum
+    
     })
 })
 
@@ -77,7 +99,7 @@ function result () {
             res = Number(firstNum) - Number(secondNum);
             output.textContent = res;  
             break;
-        case "x":
+        case "*":
             res = Number(firstNum) * Number(secondNum);
             output.textContent = res; 
             break;
@@ -86,7 +108,8 @@ function result () {
             output.textContent = res;
             break;
     }
-    firstNum = '';
+    console.log(res)
+    firstNum = res;
     secondNum = '';
     sign = '';
 }
@@ -97,30 +120,59 @@ clearButton.addEventListener("click", function(){
     secondNum = '';
     sign = '';
     output.textContent = 0
+    operation.textContent = ''
 })
 
 //Вычисление квадратного корня
 sqrtButton.addEventListener("click", function(){
     if(firstNum !== '' && secondNum == '') {
-        output.textContent = Math.sqrt(firstNum)
+        let sqrt = Math.sqrt(firstNum);
+        firstNum = sqrt;
+        output.textContent = sqrt;
     }
     else if (firstNum !== '' || secondNum !== '') { 
-        output.textContent = Math.sqrt(secondNum)
+        sqrt = Math.sqrt(secondNum);
+        secondNum = sqrt;
+        output.textContent = sqrt;
     }
-    else if (res !== '') { 
-        output.textContent = Math.sqrt(res)
+    else {
+        sqrt = Math.sqrt(res);
+        res = sqrt;
+        output.textContent = Math.sqrt(res);
     }
 })
 
 //Возведение в квадрат
 expButton.addEventListener("click", function(){
     if(firstNum !== '' && secondNum == '') {
-        output.textContent = firstNum ** 2
+        let exp = firstNum ** 2;
+        firstNum = exp;
+        output.textContent = exp;
     }
     else if (firstNum !== '' || secondNum !== '') {
-        output.textContent = secondNum ** 2
+        exp = secondNum ** 2;
+        secondNum = exp;
+        output.textContent = exp;
     }
-    else if (res !== '') {
-        output.textContent = res ** 2
+    else {
+        exp = res ** 2;
+        res = exp;
+        output.textContent = exp;
     }
 })
+
+//Кнопка +/-
+minusButton.addEventListener("click", function(){
+    let minus = ""
+    if(firstNum !== '' && secondNum == '' && minus == '') {
+        minus = "-"
+        output.textContent = minus + firstNum;
+        console.log("null:" + minus)
+    }
+    else if (firstNum !== '' && secondNum == '' && minus == '-') {
+            minus = "" 
+            output.textContent = firstNum;
+        }
+    firstNum = minus + firstNum;
+    console.log(minus)
+    })
