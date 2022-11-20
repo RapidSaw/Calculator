@@ -1,11 +1,8 @@
 let calcZone = document.querySelector(".wrapper")
 let greenLight = document.querySelector(".light")
 let button = document.querySelectorAll(".button")
-let numBtn = document.querySelectorAll("#numberButton")
-let operatorBtn = document.querySelectorAll("#operator")
-let output = document.querySelector(".result_screen p")
+let output = document.querySelector(".result_screen")
 let operation = document.querySelector(".operation_window")
-let clearButton = document.querySelector("#clearButton")
 let sqrtButton = document.querySelector("#sqrtButton")
 let expButton = document.querySelector("#expButton")
 let minusButton = document.querySelector("#minusButton")
@@ -22,127 +19,46 @@ button.forEach(btn => {
     btn.addEventListener("mouseup", function(){btn.classList.remove("pushButton")})
 })
 
-//Отображение цифр на экране при нажатии кнопок
-//Запись в переменные
 let firstNum = '';
 let secondNum = '';
 let sign = '';
+let num = '';
+let res = '';
 
-//math operators
-operatorBtn.forEach(op => {
-    op.addEventListener("click", function signOperator () {
-    if ((firstNum !== "") && (secondNum !== "")) {
-        result ();
-    }
-    sign = op.textContent
+//keyboard input
+document.addEventListener("keydown", function (getKey) {
+    num = getKey.key
+    buttonHandler()
+})
+
+//mouse input
+button.forEach(button => {
+    button.addEventListener("click", function (getKey) {
+        num = getKey.target.textContent
+        buttonHandler()
     })
 })
 
-// ввод с клавиатуры
-    document.addEventListener("keydown", function (getNum) {
-        let num = getNum.key
-        if (num >= "0" && num <= "9" || num == ".") {
-            if (sign == '' && secondNum == '') {
-                firstNum += num
-                output.textContent = firstNum
-            }
-
-            else if (firstNum !== '') {
-                output.textContent = ''
-                secondNum += num
-                output.textContent = secondNum
-            }
-        }
-
-        if (num == "+" || num == "-" || num == "*" || num == "/") {
-            sign = num
-            output.textContent = sign
-        }
-        operation.textContent = firstNum + sign + secondNum
-        
-    })
-
-//ввод с кнопок мышью
-numBtn.forEach(numBtn => {
-    numBtn.addEventListener("click", function getNumber (getNum) {
-        let num = getNum.target.textContent
-        if (num >= "0" && num <= "9" || num == ".") {
-            if (sign == '' && secondNum == '') {
-                firstNum += num
-                output.textContent = firstNum
-            }
-            else if (firstNum !== '') {
-                output.textContent = ''
-                secondNum += num
-                output.textContent = secondNum
-            }
-        }
-        if (num == "+" || num == "-" || num == "*" || num == "/") {
-                sign = num
-                output.textContent = sign
-                console.log(sign)
-        }
-        operation.textContent = firstNum + sign + secondNum
-    
-    })
-})
-
-equalButton.addEventListener("click", result)
-
-function result () {    
-    switch (sign) {
-        case "+":
-            res = Number(firstNum) + Number(secondNum);
-            output.textContent = res;
-            break;
-        case "-":
-            res = Number(firstNum) - Number(secondNum);
-            output.textContent = res;  
-            break;
-        case "*":
-            res = Number(firstNum) * Number(secondNum);
-            output.textContent = res; 
-            break;
-        case "/":
-            res = Number(firstNum) / Number(secondNum);
-            output.textContent = res;
-            break;
-    }
-    console.log(res)
-    firstNum = res;
-    secondNum = '';
-    sign = '';
-}
-
-//кнопка сброса(очистки)
-clearButton.addEventListener("click", function(){
-    firstNum = '';
-    secondNum = '';
-    sign = '';
-    output.textContent = 0
-    operation.textContent = ''
-})
-
-//Вычисление квадратного корня
+//sqrt calculation
 sqrtButton.addEventListener("click", function(){
     if(firstNum !== '' && secondNum == '') {
         let sqrt = Math.sqrt(firstNum);
         firstNum = sqrt;
-        output.textContent = sqrt;
+        output.textContent = roundResult(sqrt);
     }
     else if (firstNum !== '' || secondNum !== '') { 
         sqrt = Math.sqrt(secondNum);
         secondNum = sqrt;
-        output.textContent = sqrt;
+        output.textContent = roundResult(sqrt);
     }
     else {
         sqrt = Math.sqrt(res);
         res = sqrt;
-        output.textContent = Math.sqrt(res);
+        output.textContent = roundResult(Math.sqrt(res));
     }
 })
 
-//Возведение в квадрат
+//exp calculation
 expButton.addEventListener("click", function(){
     if(firstNum !== '' && secondNum == '') {
         let exp = firstNum ** 2;
@@ -161,18 +77,127 @@ expButton.addEventListener("click", function(){
     }
 })
 
-//Кнопка +/-
-minusButton.addEventListener("click", function(){
-    let minus = ""
-    if(firstNum !== '' && secondNum == '' && minus == '') {
-        minus = "-"
-        output.textContent = minus + firstNum;
-        console.log("null:" + minus)
-    }
-    else if (firstNum !== '' && secondNum == '' && minus == '-') {
-            minus = "" 
-            output.textContent = firstNum;
+//Change sign (+/-)
+minusButton.addEventListener("click", function () {
+    if (secondNum == '') {
+        if (firstNum[0] !== '-') {
+            firstNum = "-" + firstNum
         }
-    firstNum = minus + firstNum;
-    console.log(minus)
-    })
+        else if (firstNum[0] == '-') {
+            firstNum = firstNum.substr(1)
+        }
+        output.textContent = firstNum
+    }
+    if (secondNum !== '') {
+        if (secondNum[0] !== '-') {
+            secondNum = "-" + secondNum
+        }
+        else if (secondNum[0] == '-') {
+            secondNum = firstNum.substr(1)
+        }
+        output.textContent = secondNum
+    }
+
+})
+    
+//Handler of first number? sign and second number
+function buttonHandler() {
+    if (num >= "0" && num <= "9" || num == ".") {
+        if (sign == '' && secondNum == '') {
+            firstNum += num
+            output.textContent = firstNum
+            checkSize(output.textContent)
+        }
+        else if (firstNum !== '' && sign !== '') {
+            output.textContent = ''
+            secondNum += num
+            output.textContent = secondNum
+            checkSize(output.textContent)
+        }
+    }
+    else if (num == "+" || num == "-" || num == "*" || num == "/") {
+        if (firstNum !== '' && secondNum == '') {
+            sign = num
+            firstNum = roundResult(firstNum)
+            output.textContent = firstNum
+        }
+        else if (firstNum !== '' && secondNum !== '') {
+            result();
+            sign = num
+        }
+    }
+    else if (num == "=" || num == "Enter") {
+        result();
+    }
+    else if (num == "C" || num == "Backspace" || num == "Delete") {
+        firstNum = '';
+        secondNum = '';
+        sign = '';
+        output.textContent = 0
+        operation.textContent = '';
+        checkSize (output.textContent)
+    }
+    checkOperationWindow()
+}
+
+//Result calculation
+function result () {    
+    switch (sign) {
+        case "+":
+            res = Number(firstNum) + Number(secondNum);
+            output.textContent = res;
+            checkSize (output.textContent)
+            break;
+        case "-":
+            res = Number(firstNum) - Number(secondNum);
+            output.textContent = res;  
+            checkSize (output.textContent)
+            break;
+        case "*":
+            res = Number(firstNum) * Number(secondNum);
+            output.textContent = res; 
+            checkSize (output.textContent)
+            break;
+        case "/":
+            res = Number(firstNum) / Number(secondNum);
+            output.textContent = roundResult(res);
+            checkSize (output.textContent)
+            break;
+    }
+    
+    firstNum = res;
+    secondNum = '';
+    sign = '';
+}
+
+//Check size of result window
+function checkSize (x) {
+    output.style.fontSize = "40px"
+if (String(x).length > 7) {
+        output.style.fontSize = "28px";
+        if (String(x).length > 10) {
+            output.style.fontSize = "20px";
+            if (String(x).length > 13) {
+                output.style.fontSize = "18px"
+                if (String(x).length > 15) {
+                    output.style.fontSize = "36px"
+                    output.textContent = "Oversize";
+
+            }
+        }
+    }
+}
+}
+
+//Check operation window
+function checkOperationWindow () {
+    if (output.textContent == "Oversize" || (res !== "" && sign == '')) 
+    {operation.textContent = ''}
+    else if (output.textContent != "Oversize") 
+    {operation.textContent = firstNum + " " + sign + " " + secondNum}
+}
+
+//Round function for div and sqrt operations
+function roundResult(x) {
+	return Math.round(x * 100000) / 100000;
+}
